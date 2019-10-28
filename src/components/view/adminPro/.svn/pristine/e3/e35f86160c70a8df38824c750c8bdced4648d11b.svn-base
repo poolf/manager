@@ -1,0 +1,278 @@
+<template>
+  <div class="procalssForm">
+      <div class="procalssForm_wrapper">
+          <h2>{{titleName}}</h2>
+          <el-form ref="proclassform" :model="proclassform" :rules="rules" label-width="120px" :label-position="labelPosition">
+            <el-form-item v-show="formStatus === 1" label="自编号：" prop="ID">
+              <el-input v-model="proclassform.ID" :disabled="true"></el-input>
+            </el-form-item>
+            <el-form-item label="类别编号：" prop="clsID">
+              <el-input v-model="proclassform.clsID" placeholder="请输入类别编号"></el-input>
+            </el-form-item>
+            <el-form-item label="类别名称：" prop="clsName">
+              <el-input v-model="proclassform.clsName" placeholder="请输入类别名称"></el-input>
+            </el-form-item>
+            <!-- <el-form-item label="父编号" prop="clsParID">
+              <el-input v-model="proclassform.clsParID" placeholder="请输入父编号"></el-input>
+            </el-form-item> -->
+            <el-form-item label="所属类别：" prop="clsParID">
+              <!-- <el-input v-model="proclassform.clsParID" placeholder="请选择所属类别"></el-input> -->
+              <el-cascader
+               :options="options"
+               :props="props"
+               clearable 
+               placeholder="请选择所属类别"
+               @expand-change="handelItemProClass">
+              </el-cascader>
+            </el-form-item>
+            <el-form-item label="排序：" prop="clsSort">
+              <el-input v-model="proclassform.clsSort" placeholder="请输入排序"></el-input>
+            </el-form-item>
+            <el-form-item label="助记码：" prop="mnemonic">
+              <el-input v-model="proclassform.mnemonic" placeholder="请输入助记码"></el-input>
+            </el-form-item>
+            <el-form-item label="类别状态：" prop="delFlag">
+              <el-radio-group v-model="proclassform.delFlag">
+                <!-- <el-radio label="0">删除</el-radio> -->
+                <el-radio label="1">正常</el-radio>
+                <el-radio label="2">冻结</el-radio>
+              </el-radio-group>
+            </el-form-item>
+            <el-form-item>
+             <el-button type="primary" @click="SubmitFrom('proclassform')">{{buttonStatus}}</el-button>
+             <el-button @click="resetForm('proclassform')">取消</el-button>
+            </el-form-item>
+          </el-form>
+      </div>
+  </div>
+</template>
+<script>
+const formStatus = "";
+const getId = "";
+var itemOptionsModel = [];
+var itemOptionsLength = 0;
+const ItemProClassModel = {
+  pageIndex: 1,
+  pageSize: 10,
+  whereStr:[]
+}
+export default {
+  data () {
+    return {
+      options:[],
+      itemOptions:[],
+      titleName:'商品类别修改',
+      labelPosition:"right",
+      proclassform:{
+        ID:'',
+	      clsID:'',
+	      clsName:'',
+	      clsParID:'',
+	      clsSort:'',
+        mnemonic: '',
+        delFlag:''
+      },
+      rules: {
+        clsName:[
+          {required:true, message:'类别名称不能为空', trigger: 'blur'}
+        ],
+        clsID: [
+          {required:true, message:'类别编号不能为空', trigger: 'blur'}
+        ],
+        clsParID: [
+          {required:true, message:'父编号不能为空', trigger: 'blur'}
+        ],
+        clsSort: [
+          {required:true, message:'排序不能为空', trigger: 'blur'}
+        ],
+        mnemonic: [
+          {required:true, message:'助记码不能为空', trigger: 'blur'}
+        ],
+        delFlag: [
+          {required:true, message:'请选择是否类别状态', trigger: 'blur'}
+        ]
+      },
+      props: {
+        checkStrictly: true, 
+        expandTrigger: 'hover'
+      }  
+    }
+  },
+  created () {
+    this.showContent()
+  },
+  mounted () {
+    this.getTopProClassData()
+  },
+  methods: {
+    //获取单个商品类别model
+    getItemProClassModel(datalist){
+      ItemProClassModel.pageSize = 10;
+      ItemProClassModel.pageIndex = 1;
+      ItemProClassModel.whereStr = datalist
+    },
+    //获取单个商品类别信息
+    loadItemProClassMessage(dataModel){
+      this.$axios({
+        url: '/api/ProductClass/GetPage',
+        method: 'post',
+        data:dataModel,
+        header: {
+          'Content-Type': 'application/json;charset=UTF-8'
+        }
+      }).then((res)=>{
+        res = res.data
+        const SUCCESS_OK = true
+        const SUCCESS_NO = false
+        if(res.success === SUCCESS_OK){
+          //this.proclassform.id = res.returnData.id
+          var datalist = res.returnData
+          for(var i in datalist){
+            this.proclassform.clsID = datalist[i].clsID
+            this.proclassform.clsName = datalist[i].clsName
+            this.proclassform.clsParID = datalist[i].clsParID
+            this.proclassform.clsSort = datalist[i].clsSort
+            this.proclassform.mnemonic = datalist[i].mnemonic
+            this.proclassform.delFlag = JSON.stringify(datalist[i].delFlag)
+          }
+        }else if(response.success = SUCCESS_NO){
+          const msg = res.msgStr
+          this.$message.error(msg)
+        }
+      })
+    },
+    //通过判断表单状态决定表单显示（0：添加； 1：修改）
+    showContent(){
+      var formStatus = this.formStatus
+      var getId = this.getId
+      if(formStatus === 0){
+        this.titleName="商品类别信息添加"
+        this.buttonStatus="立即创建"
+      }
+      if(formStatus === 1){
+        this.titleName="商品类别修改"
+        this.buttonStatus="提交修改"
+        this.proclassform.ID = this.getId
+        var newlist = [];
+        newlist.push({
+          Field:"id",
+          SKey:this.getId,
+          SType:"="
+        })
+        this.getItemProClassModel(newlist)
+        this.loadItemProClassMessage(ItemProClassModel)
+      }
+    },
+    //请求数据接口获取商品类 根据父编号 （同步请求 不处理数据）
+    getpreProClassUrl(getParClsID){
+      return new Promise((resolve, reject)=>{
+        this.$axios({
+          url: '/api/ProductClass/GetByParClsID/' + getParClsID,
+          method: 'GET',
+          header: {
+            'Content-Type': 'application/json;charset=UTF-8'
+          }
+         }).then((res)=>{
+            resolve(res)
+         }).catch((err)=>{
+            reject(err)
+        })
+       })
+    },
+    //获取最高级别商品类数据列表
+    async getTopProClassData(node){
+      try{
+        let res = await this.getpreProClassUrl(890)
+        res = res.data
+        const SUCCESS_OK = true
+        const SUCCESS_NO = false
+        if(res.success === SUCCESS_OK){
+          for(var i in res.returnData){
+            var clsID = res.returnData[i].clsID
+            var clsName = res.returnData[i].clsName
+            var clsParID = res.returnData[i].clsParID
+            this.itemOptions.push({
+                value:clsID,
+                label:clsName,
+                params:clsParID,
+                children: []
+            })
+          }
+        }else if(response.success = SUCCESS_NO){
+          //newlist = [];
+          const msg = res.msgStr
+          this.$message.error(msg)
+        }
+      }catch (err){
+        console.log(err)
+      }
+      this.options = this.itemOptions
+    },
+    //子节点出发事件
+    async handelItemProClass(node){
+       console.log(node[node.length-1])
+       var getpreID = node[node.length-1]
+       var itemList = [];
+       try{
+        let res = await this.getpreProClassUrl(getpreID)
+        res = res.data
+        console.log(res)
+        const SUCCESS_OK = true
+        const SUCCESS_NO = false
+        if(res.success === SUCCESS_OK){
+          if(res.returnData.length > 0){
+            for(var i in res.returnData){
+              var clsID = res.returnData[i].clsID
+              var clsName = res.returnData[i].clsName
+              var clsParID = res.returnData[i].clsParID
+              itemList.push({
+                value:clsID,
+                label:clsName,
+                params:clsParID,
+                children: []
+              })
+            }
+            console.log(itemList)
+          }
+        }else if(res.success = SUCCESS_NO){
+          //newlist = [];
+          const msg = res.msgStr
+          this.$message.error(msg)
+        }
+      }catch (err){
+        console.log(err)
+      }
+      for(var i in this.options){
+        //console.log(this.options[i].value)
+        if(getpreID === this.options[i].value){
+          this.options[i].children = itemList
+        }
+      }
+    },
+    //提交表单数据
+    SubmitFrom(formname){
+      this.$refs[formname].validate((valid) => {
+         //console.log(brachModel);
+         var formStatus = this.formStatus
+         var getId = this.getId
+         if(valid){
+            if(formStatus === 0){
+              console.log('submit')
+            }
+            if(formStatus === 1){
+              console.log('submit')
+            }
+          }else{
+           console.log('error')
+           this.$message.error('数据校验不通过')
+           return false
+         }
+      })
+    }
+  },
+  props: ['formStatus','getId']
+}
+</script>
+<style lang="scss">
+@import './ProClassForm.scss';
+</style>

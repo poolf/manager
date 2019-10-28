@@ -1,0 +1,27 @@
+.adminProClassList{
+    .adminProContent_wrapper{
+      position: relative;
+      padding: 20px 40px 60px 40px;
+      background: #fff;
+      border-radius: 15px;
+      overflow: hidden;
+      .button_wrapper{
+          padding:10px 0 30px 0;
+      }
+      h2,h5{
+          text-align: center;
+      }
+      h5{
+        color: #909090;
+      }
+      .page_block{
+        position: absolute;
+        left: 50%;
+        margin-left: -200px;
+        bottom: 10px;
+        ul.el-pager{
+          padding-top: 0;
+        }
+      }
+    }
+}

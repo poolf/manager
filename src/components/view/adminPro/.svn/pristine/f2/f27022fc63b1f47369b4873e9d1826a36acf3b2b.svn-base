@@ -1,0 +1,14 @@
+.procalssForm{
+    .procalssForm_wrapper{
+        width: 700px;
+        padding: 20px 40px;
+        background: #fff;
+        border-radius: 15px;
+        h2{
+            text-align: center;
+        }
+        .casc{
+            display: inline;
+        }
+    }
+}

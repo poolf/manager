@@ -1,0 +1,57 @@
+.adminProClassList{
+     .top_nav{
+       display: flex;
+       border-radius: 15px 15px 0 0;
+       background: #fff;
+       padding: 20px 20px 0 20px;
+       ul{
+         margin: 0;
+         li{
+           float: left;
+           display: block;
+           list-style: none;
+         }
+         li:hover{
+           color: #b3d8ff;
+           cursor: pointer;
+         }
+         .active{
+           color: #409EFF;
+         }
+       }
+     }
+    .adminProContent_wrapper{
+      position: relative;
+      padding: 10px 40px 60px 40px;
+      background: #fff;
+      border-radius: 0 0 15px 15px;
+      overflow: hidden;
+      .button_wrapper{
+        display: flex;
+        padding:10px 0 30px 0;
+        .search_button_wrapper{
+          display: flex;
+          position: absolute;
+          right: 40px;
+          .button_search{
+            margin-left: 10px;
+          }
+        }
+      }
+      h2,h5{
+          text-align: center;
+      }
+      h5{
+        color: #909090;
+      }
+      .page_block{
+        position: absolute;
+        left: 50%;
+        margin-left: -200px;
+        bottom: 10px;
+        ul.el-pager{
+          padding-top: 0;
+        }
+      }
+    }
+}

@@ -1,0 +1,300 @@
+<template>
+  <div class="adminProClassList">
+    <el-page-header @back="goBack"></el-page-header>
+    <div class="adminProContent_wrapper">
+        <h2>商品类别管理</h2>
+        <h5>当前父编号：<span style="color:red;">{{preclsParID}}</span></h5>
+        <h5>所属类别：<span style="color:red;">{{preclsName}}</span></h5>
+        <div class="button_wrapper">
+          <el-button type="primary" @click="openAddProClass">添加商品类别</el-button>
+          <el-button type="primary" plain @click="updateSelectIdlist">批量更新类别状态</el-button>
+        </div>
+        <el-table
+          :data="proClassData"
+          style="width: 100%;"
+          @selection-change="handleSelectionChange">
+          <el-table-column type="selection" width="55"></el-table-column>
+          <el-table-column prop="id" label="自编号"></el-table-column>
+          <el-table-column prop="clsID" label="类别编号"></el-table-column>
+          <el-table-column prop="clsName" label="类别名称"></el-table-column>
+          <el-table-column prop="clsParID" label="父编号"></el-table-column>
+          <el-table-column prop="clsSort" label="排序"></el-table-column>
+          <el-table-column prop="mnemonic" label="助记码"></el-table-column>
+          <el-table-column prop="createTime" label="创建日期" width="200"></el-table-column>
+          <el-table-column prop="updateTime" label="更新日期" width="200"></el-table-column>
+          <el-table-column prop="delFlag" label="状态"></el-table-column>
+          <el-table-column label="操作" width="280">
+            <template slot-scope="scope">
+              <el-tooltip class="item" popper-class="atooltip" content="查看当前商品类别的子类别" placement="bottom">
+                <el-button size="mini" type="primary" plain icon="el-icon-more" @click="RefeshData(scope.$index, scope.row)"></el-button>
+              </el-tooltip>
+              <el-tooltip class="item" popper-class="atooltip" content="快捷变更商品类别状态" placement="bottom">
+                <el-button size="mini" type="primary" plain icon="el-icon-edit" @click="fastUpdateDeflag(scope.$index, scope.row)"></el-button>
+              </el-tooltip>
+              <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+              <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+      <div class="page_block">
+         <el-pagination
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+          :current-page.sync="currentPage"
+          :page-size="pagesize"
+          layout="total, prev, pager, next, jumper"
+          :total="totalCount">
+        </el-pagination>
+      </div>
+      <!-- 批量修改类别状态 -->
+      <el-dialog
+         title="商品类别状态修改"
+        :visible.sync="openUpdateDeflag"
+         width="30%">
+         <el-form :model="updateidForm" ref="updateidForm" :label-position="labelPosition" label-width="120px">
+            <el-form-item label="商品自编号id：" prop="ids">
+              <div>{{updateidForm.ids}}</div>
+            </el-form-item>
+            <el-form-item label="已开通医保" prop="delFlag">
+             <el-select v-model="updateidForm.delFlag" placeholder="请选择是否已开通医保">
+               <el-option label="正常" value="1"></el-option>
+               <el-option label="冻结" value="2"></el-option>
+             </el-select>
+           </el-form-item>
+          </el-form>
+          <span slot="footer" class="dialog-footer">
+            <el-button @click="openUpdateDeflag == false">取 消</el-button>
+            <el-button type="primary" @click="submitDelFlag">确 定</el-button>
+          </span>
+      </el-dialog>
+    </div>
+  </div>
+</template>
+<script>
+const ProClassModel = {
+    pageIndex:'',
+    pageSize:'',
+    orderby:'',
+    whereStr:[]
+}
+const updateDelFlagModel = {
+  idList:[],
+  delFlag:''
+}
+export default {
+  data () {
+    return {
+      proClassData:[], //商品类别数据
+      preclsParID:890, //最高级父编号
+      preclsName:"无",
+      currentPage: 1, //分页默认页数
+      totalCount: 0, //分页的总条数
+      pagesize: 10, //每页显示记录数
+      multipleSelection:[], //多选
+      selectIdlist:[], //批量提交的id数组
+      saveclsParID:[{id:890,name:"无"}],
+      openUpdateDeflag: false,
+      labelPosition: "left",
+      updateidForm:{
+        ids:[],
+        delFlag: "1"
+      }
+    }
+  },
+  created () {
+    this.loadProList(890,"无")
+  },
+  methods: {
+    //获取usermodel数据
+    getProclassModel(orderby, wherestr){
+       ProClassModel.pageIndex = this.currentPage;
+       ProClassModel.pageSize = this.pagesize;
+       ProClassModel.orderby = orderby;
+       ProClassModel.whereStr = wherestr
+    },
+    //后台接口调用获取商品类别信息
+    getProclassUrl(dataModel){
+      this.$axios({
+          url:'/api/ProductClass/GetPage',
+          method:'post',
+          data: dataModel,
+          headers: {
+            'Content-Type': 'application/json'
+           }
+          }).then((response) => {
+            response = response.data
+            const SUCCESS_OK = true
+            const SUCCESS_NO = false
+            if(response.success === SUCCESS_OK){
+              this.proClassData = response.returnData //获取当前页数据
+              var list = this.proClassData
+              this.totalCount = list.length
+              if(response.returnData === null){
+                  this.$message.error(response.msgStr)
+              }
+            } else if(response.success === SUCCESS_NO){
+              this.proClassData = [];
+              const msg = response.msgStr
+              console.log(msg)
+            } 
+      });
+    },
+    //获取数据
+    loadProList(clsParID,clasName){
+      this.preclsParID = clsParID
+      this.preclsName = clasName
+      var newList = [];
+      newList.push({ Field: "clsParID", SKey: clsParID, SType:'='})
+      this.getProclassModel('',newList)
+      this.getProclassUrl(ProClassModel)
+    },
+    //表格多选
+    handleSelectionChange(val) {
+      this.multipleSelection = val;
+      this.selectIdlist =[];
+      //console.log(this.multipleSelection)
+      for(var i in this.multipleSelection){
+        this.selectIdlist.push(this.multipleSelection[i].id)
+      }
+      //console.log(this.selectIdlist)
+    },
+    //批量更新按钮
+    updateSelectIdlist(){
+      if(this.selectIdlist.length === 0){
+        this.$message.error('请选择要修改的商品类别')
+      } else {
+        this.openUpdateDeflag = true;
+        this.updateidForm.ids = this.selectIdlist
+      }
+      //console.log(this.selectIdlist)
+    },
+    openAddProClass(){
+      this.$router.push({
+        path:'/adminProClassAdd'
+      })
+    },
+    //获取修改类别状态model
+    getDelFlagModel(ids,delFlag){
+       updateDelFlagModel.idList = ids;
+       updateDelFlagModel.delFlag = delFlag;
+    },
+    //请求修改类别状态url
+    getDelFlagUrl(dataModel){
+      this.$axios({
+          url:'/api/ProductClass/PutAllPClsType',
+          method:'put',
+          data: dataModel,
+          headers: {
+            'Content-Type': 'application/json'
+           }
+          }).then((response) => {
+            response = response.data
+            const SUCCESS_OK = true
+            const SUCCESS_NO = false
+            if(response.success === SUCCESS_OK){
+              this.$message.success(response.msgStr)
+              this.openUpdateDeflag = false;
+            } else if(response.success === SUCCESS_NO){
+              this.openUpdateDeflag = true;
+              this.$message.error(response.msgStr)
+            } 
+      });
+    },
+    //修改类别状态url
+    submitDelFlag(){
+       var idList = this.updateidForm.ids;
+       var delFlag = this.updateidForm.delFlag
+       this.getDelFlagModel(idList,delFlag)
+       this.getDelFlagUrl(updateDelFlagModel)
+       this.loadProList(this.preclsParID)
+    },
+
+    //操作栏四个功能按钮
+    //1、查看当前类别的子类别
+    RefeshData(index, row){
+     // console.log(row.clsID)
+      this.loadProList(row.clsID,row.clsName)
+      this.saveclsParID.push({
+        id:row.clsID,
+        name:row.clsName
+      })
+      //console.log(this.saveclsParID)
+    },
+    //2、快捷修改类别状态
+    fastUpdateDeflag(index, row){
+      //console.log(row.id)
+      var preDeflag;
+      if(row.delFlag === 1){
+        preDeflag = 2 
+      }
+      if(row.delFlag === 2) {
+        preDeflag = 1
+      }
+      var itemlist = []
+      itemlist.push(row.id)
+      this.getDelFlagModel(itemlist,preDeflag)
+      this.getDelFlagUrl(updateDelFlagModel)
+      this.loadProList(this.preclsParID)
+    },
+    //3、修改类别信息
+    handleEdit(index, row) {
+      //console.log(index, row);
+      this.$router.push({
+        path:'/adminProClassUpdate',
+        query: {
+          id: JSON.stringify(row.id)
+        }
+      })
+    },
+    //4、删除类别
+    handleDelete(index, row) {
+      console.log(index, row);
+    },
+
+    //每个显示记录数
+    handleSizeChange(val){
+     // console.log(`每页${val}条`)
+      this.pagesize = val
+      this.loadProList()
+    },
+    //当前页
+    handleCurrentChange(val){
+     // console.log(`当前页：${val}`)
+      this.currentPage = val
+      this.loadProList()
+    },
+    //返回
+    goBack(){
+      for(var i in this.saveclsParID){
+        if(this.saveclsParID[i].id === this.preclsParID){
+          console.log(i)
+          if(i > 0){
+            var oldclsParID = this.saveclsParID[i-1].id
+            var oldclsName = this.saveclsParID[i-1].name
+            console.log(oldclsParID)
+          } else {
+            var oldclsParID = this.saveclsParID[i].id
+            var oldclsName = this.saveclsParID[i].name
+          }
+          this.loadProList(oldclsParID,oldclsName)
+        }
+      }
+    }
+  }
+}
+</script>
+<style lang="scss">
+@import './adminProClassList.scss';
+.atooltip {
+  background: #ecf5ff!important;
+  color: #409eff!important;
+  border:1px solid #409eff!important;
+}
+.el-tooltip__popper[x-placement^=bottom] .popper__arrow {
+    border-bottom-color: #409eff!important;
+  }
+  .el-tooltip__popper[x-placement^=bottom] .popper__arrow:after {
+    border-bottom-color: #409eff!important;
+  }
+
+</style>

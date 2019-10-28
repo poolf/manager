@@ -1,0 +1,58 @@
+.mHeader{
+    position: relative;
+    width: 100%;
+    height: 60px;
+    clear: both;
+    .header_icon{
+        position: absolute;
+        img{
+            width: 25px;
+            height: 25px;
+            padding-top: 15px;
+        }
+    }
+    .el-button{
+        background-color: #242f42;
+        color: #fff;
+        border: none;
+        font-size: 20px;
+        padding-left: 2px;
+        padding-right: 20px;
+    }
+    .header_title{
+        display: inline-block;
+        height: 100%;
+        line-height: 60px;
+        span{
+            padding-left: 48px;
+        }
+    }
+    .header_bar{
+        position: absolute;
+        display: inline-block;
+        height: 60px;
+        line-height: 60px;
+        right: 20px;
+        .manager_img{
+            display: inline-block;
+            position: absolute;
+            right: 220px;
+            img{
+              width: 25px;
+              height: 25px;
+              margin-top: 15px; 
+          }
+        }
+        
+        .el-dropdown-link{
+            color: #fff;
+        }
+        .manager_user{
+            display: inline-block;
+            font-size: 14px;
+            text-decoration: #fff;
+            padding-right: 18px;
+            text-decoration: underline;
+        }
+    }
+}

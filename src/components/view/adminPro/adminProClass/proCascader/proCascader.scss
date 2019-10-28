@@ -1,0 +1,24 @@
+.proCascader{
+    display: flex;
+    .value_wrapper .select_wrapper{
+        flex: 1;
+    }
+    .value_wrapper{
+       display: flex;
+       .value_input{
+           width: 220px;
+       }
+       .value_button{
+           margin-left: 10px;
+       }
+    }
+    .select_wrapper{
+       display: flex;
+       padding-left: 4px;
+       .select_casc{
+           width: 160px;
+           padding: 0 10px;
+       }
+    }
+    
+}

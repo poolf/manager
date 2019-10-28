@@ -1,0 +1,23 @@
+.procluter{
+    .procluter_wrapper{
+      position: relative;
+      padding: 10px 40px 60px 40px;
+      background: #fff;
+      border-radius: 0 0 15px 15px;
+      .addbc.el-button{
+          margin: 10px 10px 20px 10px;
+      }
+      h2{
+          text-align: center;
+      }
+      .page_block{
+        position: absolute;
+        left: 50%;
+        margin-left: -150px;
+        bottom: 10px;
+        ul.el-pager{
+          padding-top: 0;
+        }
+      }
+    }
+}

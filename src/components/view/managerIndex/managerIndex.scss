@@ -1,0 +1,121 @@
+.manager_index{
+    .manager_user_fast{
+        display: flex;
+        width: 100%;
+        height: 400px;
+        .left_top, .left_bottom{
+            margin: 0 10px 10px 0;
+            border-radius: 15px;
+        }
+        .right_bottom, .right_top{
+            margin: 0 0 10px 10px;
+            border-radius: 15px;
+        }
+        .left{
+            width: 270px;
+            height: 100%;
+            font-size: 12px;
+            color: #666666;
+            .left_top{
+               height: 190px;
+               background: #fff;
+               padding: 10px;
+               .logo_wrapper{
+                   width: 100%;
+                   display: table;
+                   height: 83px;
+                   img{
+                       margin-top: 20px;
+                       margin-left: 30px;
+                       height: 50px;
+                       width: 50px;
+                   }
+                   .username_wrapper{
+                       display: table-cell;
+                       vertical-align: middle;
+                   }
+               }
+               .login_histroy_wrapper{
+                   width: 100%;
+                   height: 72px;
+                   line-height: 30px;
+                   padding-left: 30px;
+               }
+            }
+            .left_bottom{
+                height: 180px;
+                background: #fff;
+             }
+        }
+        .right{
+            flex: 1;
+            color: #666666;
+            .right_top{
+                height: 100px;
+                display: flex;
+            }
+            .right_top>div{
+                flex: 1;
+                background: #fff;
+                margin: 0 10px;
+                border-radius: 10px;
+                .sum_icon{
+                    display: inline-block;
+                    width: 40%;
+                    height: 100%;
+                    line-height: 100px;
+                    text-align: center;
+                    border-radius: 10px 0 0 10px;
+                    font-size: 36px;
+                    color: #fff;
+                }
+                .sum_content{
+                    float: right;
+                    width: 60%;
+                    height: 100%;
+                    text-align: center;
+                    padding-top: 20px;
+                    .content{
+                        font-size: 26px;
+                        font-weight: 700;
+                    }
+                    .f1{
+                        color: #2d8cf0
+                    }
+                    .f2{
+                        color: #64d572;
+                    }
+                    .f3{
+                        color: #f25e43;
+                    }
+                }
+                .sum_icon1{
+                    background-color: #2d8cf0;
+                }
+                .sum_icon2{
+                    background-color: #64d572;
+                }
+                .sum_icon3{
+                    background-color: #f25e43;
+                }
+            }
+            .right_bottom{
+                height: 280px;
+                padding-top:10px;
+                background: #fff;
+            }
+        }
+    }
+    .manger_data_fast{
+        display: flex;
+        width: 100%;
+        height: 430px;
+        margin-top:10px;
+        div{
+            flex: 1;
+            margin: 10px 10px 10px 0;
+            background: #fff;
+            border-radius: 15px;
+        }
+    }
+}

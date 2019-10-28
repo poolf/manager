@@ -1,0 +1,230 @@
+.adminBraSearch_wrapper{
+    .search_nav{
+        padding: 15px;
+        background: #fff;
+        border-radius: 15px;
+        h2{
+            margin: 0;
+            text-align: center;
+            padding-bottom: 15px;
+        }
+    }
+    .search_content{
+        position: relative;
+        overflow: hidden;
+        margin-top:15px;
+        padding-bottom: 50px;
+        background: #fff;
+        border-radius: 15px;
+        ul{
+            list-style: none;
+            padding: 10px;
+            margin: 0;
+            overflow: hidden;
+            .show_search_item{
+                float: left;
+                margin: 30px 40px;
+                width: 300px;
+                font-size: 14px;
+                color: #616161;
+                background: #dee3eb;
+                border-radius: 15px;
+                box-shadow:2px 2px 10px #909090;
+                .show_search_item_wrpper{
+                  span{
+                    color:#242f42;
+                    line-height: 30px;
+                    font-size: 12px;
+                    padding-left: 10px;
+                    font-weight: 700;
+                  }
+                  .el-divider{
+                    width: 296px;
+                    height: 1px;
+                    margin: 2px;
+                    padding: 0;
+                  }
+                  .gallezyImg_div{
+                    height: 50px;
+                  }
+                }
+                .show_search_item_wrpper>div{
+                    display: block;
+                    overflow: hidden;
+                    white-space: nowrap;
+                    text-overflow: ellipsis;
+                    padding: 5px;
+                    height: 30px;
+                }
+                .other_wrapper{
+                  span{
+                    color: #242f42;
+                    line-height: 30px;
+                    font-size: 14px;
+                    padding-left: 10px;
+                  }
+                }
+                .other_wrapper>div{
+                    padding: 5px;
+                    height: 30px;
+                }
+                .show_search_item_wrpper :nth-child(2n){
+                    background: #bac0c9;
+                }
+                .button_wrapper{
+                  display: flex;
+                  height: 35px;
+                  padding-top: 5px;
+                  .left_button, .right_button, .center_button, .center_button1{
+                    flex: 1;
+                    text-align: center;
+                    line-height: 30px;
+                    color: #fff;
+                    padding: 0px;
+                    margin: 0px;
+                  }
+                  .left_button{
+                     background: #242f42;
+                     border-radius: 0 0 0 15px;
+                  }
+                  .right_button{
+                     background: #616161;
+                     border-radius: 0 0 15px 0;
+                  }
+                  .center_button{
+                    background: #909399;
+                  }
+                  .center_button1{
+                    background: #495464;
+                  }
+              }
+          }
+        }
+        .page_block{
+          position: absolute;
+          left: 50%;
+          margin-left: -264px;
+          bottom: 5px;
+          ul.el-pager{
+            padding-top: 0;
+          }
+        }
+    }
+    .search_content_1{
+        position: relative;
+        overflow: hidden;
+        margin-top:15px;
+        padding-bottom: 15px;
+        background: #fff;
+        border-radius: 15px;
+      .checkAllbutton{
+        padding: 20px;
+        display: inline-block;
+        .el-checkbox__input.is-checked .el-checkbox__inner::after{
+          left: 6px;
+          top:3px;
+          border: 3px solid #fff;
+          box-sizing: content-box;
+          border-left: 0;
+          border-top: 0;
+          transform: rotate(45deg) scaleY(1);
+        }
+        .el-checkbox__inner{
+          width: 20px;
+          height: 20px;
+        }
+      }
+      .update_bcID{
+        background-color: #242f42;
+        color: #fff;
+        position: absolute;
+        right: 50px;
+        top: 20px;
+      }
+      ul{
+        list-style: none;
+        padding: 10px;
+        margin: 0;
+        overflow: hidden;
+        li{
+          .el-checkbox{
+            display: flex;
+          }
+          .el-checkbox__label{
+            width: 100%;
+          }
+          .el-checkbox__input{
+            line-height: 60px;
+            padding: 0 15px;
+          }
+          .el-checkbox__inner{
+            width: 20px;
+            height: 20px;
+          }
+          .el-checkbox__input.is-checked .el-checkbox__inner::after{
+            left: 6px;
+            top:3px;
+            border: 3px solid #fff;
+            box-sizing: content-box;
+            border-left: 0;
+            border-top: 0;
+            transform: rotate(45deg) scaleY(1);
+          }
+        }
+      }
+      .show_bran_item{
+        position: relative;
+        overflow: hidden;
+        margin: 15px 20px;
+        font-size: 14px;
+        color: #616161;
+        background: #dee3eb;
+        border-radius: 15px;
+        box-shadow:2px 2px 10px #909090;
+        .show_bran_item_wrpper{
+          display: inline-block;
+          height: 100%;
+          width: 100%;
+        }
+        .show_bran_item_wrpper>div{
+          display: inline-block;
+          height: 100%;
+          line-height: 60px;
+          padding-right: 15px;
+          span{
+            font-weight: 700;
+          }
+        }
+        .button_wrapper{
+          position: absolute;
+          right: 20px;
+          margin: 10px 0;
+          .top_button{
+            background-color: #242f42;
+            color: #fff;
+          }
+          .bottom_button{
+            background-color: #616161;
+            color: #fff;
+          }
+        }
+      }
+      .show_bran_item>div{
+        display: flex;
+      }
+    }
+    .dialog{
+      .info_item{
+        margin: 10px;
+        padding-left: 10px;
+      }
+      span{
+        font-weight: 700;
+      }
+      .el-dialog__body{
+        background: #dee3eb;
+        margin: 30px 20px;
+        border-radius: 15px;
+      }
+    }
+}
