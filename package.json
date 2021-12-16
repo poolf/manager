@@ -15,7 +15,7 @@
     "echarts": "^4.2.1",
     "element-ui": "^2.11.1",
     "js-base64": "^2.5.1",
-    "plupload": "^2.3.6",
+    "plupload": "^2.3.9",
     "vue": "^2.5.2",
     "vue-baidu-map": "^0.21.22",
     "vue-router": "^3.0.1",
